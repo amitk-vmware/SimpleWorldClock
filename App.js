@@ -1,25 +1,31 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Home from './src/components/Home';
 import Sample from './src/components/Sample';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Navigation from './src/components/Navigation';
+import {NavigationContainer} from '@react-navigation/native';
 
 const App = () => {
-  const [regions, setRegions] = useState([]);
+  // const [regions, setRegions] = useState([]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Home
-        setRegions={region => setRegions(...regions, region)}
-        regions={regions}
-      />
-      {/* <Sample /> */}
-    </SafeAreaView>
+    <NavigationContainer>
+      <GestureHandlerRootView style={styles.container}>
+        <SafeAreaView style={{flex: 1}}>
+          <Navigation />
+          {/* <Sample /> */}
+        </SafeAreaView>
+      </GestureHandlerRootView>
+    </NavigationContainer>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // backgroundColor: 'green',
   },
 });
 

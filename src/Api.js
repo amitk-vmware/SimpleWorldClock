@@ -18,3 +18,13 @@ export const placesApi = async text => {
     console.log(`Unable to fetch location due to: ${e}`);
   }
 };
+
+export const placeDetailsApi = async id => {
+  try {
+    const response = await fetch(`${PLACES_API_HOST}/geo/places/${id}`);
+    const details = await response.json();
+    return details.data;
+  } catch (e) {
+    console.log(`Unable to fetch location due to: ${e}`);
+  }
+};
