@@ -9,14 +9,26 @@ const DrawerNav = createDrawerNavigator();
 const Drawer = () => {
   return (
     <DrawerNav.Navigator
-      drawerContent={props => <CustomDrawerContent {...props} />}>
+      drawerContent={props => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        drawerStyle: styles.drawerStyle,
+        headerTintColor: styles.headerTintColor,
+      }}>
       <DrawerNav.Screen name="HOME" component={Home} />
     </DrawerNav.Navigator>
   );
 };
 
 const styles = StyleSheet.create({
+  drawerStyle: {
+    backgroundColor: 'lightblue',
+  },
+  headerStyle: {
+    backgroundColor: 'lightbrown',
+  },
+  headerTintColor: {
 
+  }
 });
 
 export default Drawer;

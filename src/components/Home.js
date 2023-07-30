@@ -1,32 +1,22 @@
-import React, {useState} from 'react';
-import {
-  StyleSheet,
-  TextInput,
-  View,
-  Text,
-  Keyboard,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, TextInput, View, Text, Keyboard} from 'react-native';
 import {placesApi, placeDetailsApi} from '../Api';
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
-
-import Clock from './clock';
-import {convertTimezone} from '../utils';
 import TimerList from './TimerList';
-
-const selectedRegion = [{ "city": "Arwal district", "country": "India", "countryCode": "IN", "deleted": false, "id": 2987439, "latitude": 25.24, "longitude": 84.67, "name": "Arwal district", "population": 700843, "region": "Bihar", "regionCode": "BR", "regionWdId": "Q1165", "timezone": "Asia__Kolkata", "type": "ADM2", "wikiDataId": "Q42917" }]
+import {storeData, storeObject, getData, getObject} from '../AsyncStorage';
 
 const Home = () => {
   const [places, setPlaces] = useState([]);
-  const [regions, setRegions] = useState(selectedRegion);
+  const [regions, setRegions] = useState([]);
   const [clicked, setClicked] = useState(false);
   const [searchValue, setSearchValue] = useState();
 
   const onPlaceSearch = async text => {
     setSearchValue(text);
     const result = await placesApi(text);
-    setPlaces(result);
+    const regionIds = regions.map(r => r.id);
+    setPlaces(result.filter(r => regionIds.includes(r.id) === false));
   };
 
   const onRegionSelect = async region => {
@@ -35,9 +25,27 @@ const Home = () => {
     if (region_ids.includes(region.id) === true) {
       return;
     }
-    // console.log(details, 'get details from api');
+    console.log(places.filter(p => region_ids.includes(p.id) === false), 'places');
+    setPlaces(places.filter(p => region_ids.includes(p.id) === false));
     setRegions([...regions, details]);
   };
+
+  useEffect(() => {
+    const fetchRegions = async () => {
+      const reg = await getObject('regions');
+      if (reg !== undefined) {
+        setRegions(reg);
+      }
+    };
+    fetchRegions();
+  }, []);
+
+  useEffect(() => {
+    const setReg = async () => {
+      await storeObject('regions', regions);
+    };
+    setReg();
+  }, [regions]);
 
   return (
     <View style={styles.container}>
@@ -72,19 +80,19 @@ const Home = () => {
           />
         )}
       </View>
-      {places && places.length
-        ? places.map((place, index) => (
-            <View
-              style={{height: 20, backgroundColor: 'white', flex: 1}}
-              key={index}>
-              <Text
-                onPress={() => onRegionSelect(place)}
-                style={styles.options}>
-                {place.name}
-              </Text>
-            </View>
-          ))
-        : null}
+      <View style={styles.places}>
+        {places && places.length
+          ? places.map((place, index) => (
+              <View style={styles.results} key={index}>
+                <Text
+                  onPress={() => onRegionSelect(place)}
+                  style={styles.options}>
+                  {place.name}
+                </Text>
+              </View>
+            ))
+          : null}
+      </View>
       <TimerList regions={regions} setRegions={setRegions} />
     </View>
   );
@@ -93,17 +101,15 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // margin: 15,
     justifyContent: 'flex-start',
-    // alignItems: 'center',
-    // flexDirection: 'row',
-    backgroundColor: 'blue',
+    backgroundColor: 'gold',
   },
   searchBar: {
     padding: 10,
     flexDirection: 'row',
-    margin: 10,
     height: 80,
+    marginHorizontal: 10,
+    marginTop: 10,
     backgroundColor: '#d9dbda',
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -112,8 +118,15 @@ const styles = StyleSheet.create({
   options: {
     fontSize: 20,
   },
-  rowItem: {
-
+  results: {
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightblue',
+    padding: 5,
+    marginHorizontal: 10,
+  },
+  places: {
+    zIndex: 1,
   },
   input: {
     fontSize: 20,

@@ -1,16 +1,11 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import {convertTZ} from '../utils';
-// import dayjs from 'dayjs';
-// import utc from 'dayjs/plugin/utc';
-// import timezone from 'dayjs/plugin/timezone';
+import {getData} from '../AsyncStorage';
 
-// dayjs.extend(utc);
-// dayjs.extend(timezone);
-
-const Clock = ({timezone}) => {
+const Clock = ({timezone, timeStyle, dayStyle}) => {
   const [date, setDate] = useState(new Date());
   const timer = useRef(null);
+  const clockType = getData('clockType');
 
   useEffect(() => {
     timer.current = setInterval(() => {
@@ -23,7 +18,14 @@ const Clock = ({timezone}) => {
   }, [timezone]);
 
   const returnTime = () => {
-    return date.toLocaleTimeString('en-US', {timeZone: timezone});
+    const options = {
+      timeZone: timezone,
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: clockType === null ? false : clockType,
+    };
+    return date.toLocaleTimeString('en-US', options);
   };
 
   const returnDate = () => {
@@ -36,8 +38,8 @@ const Clock = ({timezone}) => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{returnTime()}</Text>
-      <Text style={styles.day}>{returnDate()}</Text>
+      <Text style={[styles.time, timeStyle]}>{returnTime()}</Text>
+      <Text style={[styles.day, dayStyle]}>{returnDate()}</Text>
     </View>
   );
 };
@@ -46,10 +48,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    // backgroundColor: 'w',
+    alignItems: 'center',
   },
   time: {
-    fontSize: 30,
+    fontSize: 24,
     color: 'black',
   },
 });
