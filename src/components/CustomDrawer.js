@@ -47,9 +47,7 @@ const CustomDrawerContent = props => {
       <DrawerItem
         label="Menu Options"
         icon={({focused, color, size}) => (
-          <LineIcons name="grid" size={25} color="black">
-            {/* {` Menu Options`} */}
-          </LineIcons>
+          <LineIcons name="grid" size={25} color={theme.color} />
         )}
         style={styles.drawerHeader}
         labelStyle={styles.drawerHeaderLabelStyle}
@@ -59,7 +57,7 @@ const CustomDrawerContent = props => {
           key={option.label}
           label={option.label}
           icon={({focused, color, size}) => (
-            <LineIcons name={option.icon} size={20} color="black" />
+            <LineIcons name={option.icon} size={20} color={theme.color} />
           )}
           onPress={() => onPress(option)}
           style={styles.drawerOption}
@@ -74,21 +72,21 @@ const styles = StyleSheet.create({
   drawerHeader: {
     paddingLeft: 10,
     justifyContent: 'center',
-    backgroundColor: 'lightgreen',
+    backgroundColor: theme.backgroundColor,
     fontFamily: 'sans-sarif',
     height: 90,
   },
   drawerHeaderLabelStyle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: 'black',
+    color: theme.color,
   },
   drawerOption: {
-    backgroundColor: 'lightgreen',
+    backgroundColor: theme.backgroundColor,
   },
   drawerOptionLabel: {
     fontWeight: 'normal',
-    color: 'black',
+    color: theme.color,
   },
 });
 

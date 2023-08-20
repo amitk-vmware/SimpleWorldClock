@@ -5,7 +5,7 @@ export const convertTZ = (date, tzString) => {
 };
 
 export const convertTimezone = str => {
-  return str.replace('__', '/');
+  return str.replaceAll('__', '/');
 };
 
 export const onShare = async () => {
@@ -29,10 +29,19 @@ export const onShare = async () => {
   }
 };
 
+export const widthConstant = 30;
+export const widthConstantModal = 100;
+
 export const themes = {
   default: {
-    backgroundColor: '',
-    color: '',
+    backgroundColor: '#1893f8',
+    color: '#F5F5F5',
+    modelBackgroundColor: '#76b9f0',
+    searchBarBackgroundColor: '#FFE55C',
+    searchResultBackgroundColor: '#ffffb7',
+    buttonBackgroundColor: '#FFDE2E',
+    buttonTextColor: '#000000',
+    headerColor: '#171810',
   },
 };
 
